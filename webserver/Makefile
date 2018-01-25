@@ -2,10 +2,10 @@
 # ainsi que les paramètres de compilation
 CC=gcc
 LD=gcc
-CFLAGS=- Wall -W - Werror
+CFLAGS=-Wall -W -Werror
 LDFLAGS=
 # Le nom de l’exécutable à fabriquer
-EXE=pawnee
+EXE=fsociety
 # Les variables HEADERS, CFILES et OBJS vont contenir respectivement
 # la listes des fichiers .h, .c et le nom des fichiers .o à fabriquer
 # On utilise la directive particulière $(wildcard ...) qui permet
@@ -18,14 +18,14 @@ CFILES=$(wildcard *.c)
 OBJS=$(CFILES:.c=.o)
 # Même utilisation que précédemment. On précise les règles qui
 # ne fabrique pas de fichier du nom de leur cible
-. PHONY: all clean mrproper
+.PHONY: all clean mrproper
 # La règle par défaut déclenche la fabrication de l’exécutable
 # par dépendance
 all: $(EXE)
 # Cette règle permet de construire l’exécutable. Elle dépend des fichiers
 # .o et effectue l’édition de lien. Rien de nouveau ici
 $(EXE): $(OBJS)
-		$ (LD) $^ $(LDFLAGS) -o $@
+		$(LD) $^ $(LDFLAGS) -o $@
 # Cette règle permet de construire automatiquement les règles
 # de compilation pour chacun des fichiers .c
 # l’option -MM de gcc analyse un fichier .c et
