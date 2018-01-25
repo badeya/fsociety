@@ -1,6 +1,6 @@
-<center>#GNU GENERAL PUBLIC LICENSE</center>
+<div style="text-align:center"># GNU GENERAL PUBLIC LICENSE</div>
 
-<center>Version 3, 29 June 2007</center>
+<div style="text-align:center">Version 3, 29 June 2007</div>
 
 Copyright © 2007 Free Software Foundation, Inc. <[https://fsf.org/](https://fsf.org/)>
 
