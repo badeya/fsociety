@@ -19,7 +19,7 @@ int main(void) {
 	}
 
 	int socket_client ;
-	while(1){
+	while(1) {
 		socket_client = accept(socket_serveur, NULL ,NULL);
 		
 		if ( socket_client == -1 )
@@ -30,15 +30,7 @@ int main(void) {
 
 		const char * message_bienvenue = "Bonjour, bienvenue sur mon serveur \n";
 		
-		// a enlever
-		while(1){
-			write(socket_client, message_bienvenue, strlen(message_bienvenue));
-		}
-	}
+		write(socket_client, message_bienvenue, strlen(message_bienvenue));
 
-	// char buffer[50];
-	// int bytes;
-	// while ((bytes = read(socket_client, buffer, 50)) > 0) {
-	// 	printf("%s", buffer);
-	// }
+	}
 }
