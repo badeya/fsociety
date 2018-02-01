@@ -1,0 +1,12 @@
+1. "bind socker_serveur: Address already in use
+accept: Socket operation on non-socket".
+
+La socket n'est pas fermée.
+Délais de 30 secondes avant de pouvoir relancer.
+
+2. Cela fait planter le serveur.
+
+3. Telnet n'est pas installé sur les machines de la salle TP.
+
+4. Un seul des clients reçoit les messages du serveur.
+Notre serveur est donc mono-client.

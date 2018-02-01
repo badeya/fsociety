@@ -1,3 +1,15 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <sys/types.h>
+#include <sys/socket.h>
+
+#include <arpa/inet.h>
+
+#include <unistd.h>
+
 #include "socket.h"
 
 int creer_serveur(int port) {
