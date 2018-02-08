@@ -20,6 +20,7 @@ int main(void) {
 
 	int socket_client ;
 	while(1) {
+
 		socket_client = accept(socket_serveur, NULL ,NULL);
 		
 		if ( socket_client == -1 )
@@ -28,9 +29,15 @@ int main(void) {
 			exit(1);
 		}
 
-		const char * message_bienvenue = "Bonjour, bienvenue sur mon serveur \n";
+		if (fork() == 0) {
+			while (1) {
+				const char * message_bienvenue = "Bonjour, bienvenue sur mon serveur \n";
 		
-		write(socket_client, message_bienvenue, strlen(message_bienvenue));
+				write(socket_client, message_bienvenue, strlen(message_bienvenue));
+			}
+		}
+
+		close(socket_client);
 
 	}
 }

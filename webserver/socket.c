@@ -24,6 +24,12 @@ int creer_serveur(int port) {
         return 1;
     }
 
+    // Options socket
+    int optval = 1;
+
+    if (setsockopt(socket_serveur, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(int )) == -1)
+        perror("Can not set SO_REUSEADDR option");
+
     // Mise en place bind
     struct sockaddr_in saddr ;
     saddr.sin_family = AF_INET ;
