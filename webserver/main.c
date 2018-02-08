@@ -6,10 +6,14 @@
 #include <sys/socket.h>
 
 #include <unistd.h>
+#include <signal.h>
 
+#include "main.h"
 #include "socket.h"
 
 int main(void) {
+
+	initialiser_signaux();
 
 	int socket_serveur = creer_serveur(8080);
 	if (socket_serveur == -1)
@@ -40,4 +44,11 @@ int main(void) {
 		close(socket_client);
 
 	}
+}
+
+void initialiser_signaux() {
+	
+	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
+		perror("signal");
+
 }
