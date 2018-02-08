@@ -13,6 +13,8 @@
 
 int main(void) {
 
+	const char * message_bienvenue = "Bonjour, bienvenue sur mon serveur \n";
+
 	initialiser_signaux();
 
 	int socket_serveur = creer_serveur(8080);
@@ -34,10 +36,17 @@ int main(void) {
 		}
 
 		if (fork() == 0) {
+			close(socket_serveur);
+			write(socket_client, message_bienvenue, strlen(message_bienvenue));
+
 			while (1) {
-				const char * message_bienvenue = "Bonjour, bienvenue sur mon serveur \n";
-		
-				write(socket_client, message_bienvenue, strlen(message_bienvenue));
+				char buffer[150];
+				while(read(socket_client, buffer, 150) > 0) {
+					//buffer[150] = '\0';
+					printf("Message: %s", buffer);
+				}
+				printf("DEBUG: client deconnecté \n");
+				return -1;
 			}
 		}
 
