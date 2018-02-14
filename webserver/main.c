@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <sys/types.h>
 #include <sys/socket.h>
-
 #include <unistd.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "main.h"
 #include "socket.h"
+
+#define BUFFER_SIZE 150
 
 int main(void) {
 
@@ -37,12 +39,13 @@ int main(void) {
 
 		if (fork() == 0) {
 			close(socket_serveur);//car fils pas besoin socket : il ya encore la reférence dans son père
-
+			
 			write(socket_client, message_bienvenue, strlen(message_bienvenue));
-		
+			
 			while (1) {
-				char buffer[150];
-				while(read(socket_client, buffer, 150) > 0) {
+				char buffer[BUFFER_SIZE];
+
+				while(read(socket_client, buffer, BUFFER_SIZE) > 0) {
 					//buffer[150] = '\0';
 					printf("Message: %s", buffer);
 				}
