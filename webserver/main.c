@@ -38,10 +38,8 @@ int main(void) {
 		if (fork() == 0) {
 			close(socket_serveur);//car fils pas besoin socket : il ya encore la reférence dans son père
 
-			if(write(socket_client, message_bienvenue, strlen(message_bienvenue))<=0){
-				break;
-			}
-
+			write(socket_client, message_bienvenue, strlen(message_bienvenue));
+		
 			while (1) {
 				char buffer[150];
 				while(read(socket_client, buffer, 150) > 0) {
@@ -77,4 +75,5 @@ void initialiser_signaux() {
 
 void traitement_signal(int sig){
 	printf("Signal %d reçu \n", sig);
+	while(waitpid(-1,NULL,WNOHANG)>0);
 }
