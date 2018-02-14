@@ -36,8 +36,11 @@ int main(void) {
 		}
 
 		if (fork() == 0) {
-			close(socket_serveur);
-			write(socket_client, message_bienvenue, strlen(message_bienvenue));
+			close(socket_serveur);//car fils pas besoin socket : il ya encore la reférence dans son père
+
+			if(write(socket_client, message_bienvenue, strlen(message_bienvenue))<=0){
+				break;
+			}
 
 			while (1) {
 				char buffer[150];
@@ -51,13 +54,27 @@ int main(void) {
 		}
 
 		close(socket_client);
+		return 0;
 
 	}
 }
 
 void initialiser_signaux() {
-	
+
+	struct sigaction sa;
+
 	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
 		perror("signal");
 
+	sa.sa_handler = traitement_signal;
+	sigemptyset(&sa.sa_mask);
+	sa . sa_flags = SA_RESTART;
+	if(sigaction(SIGCHLD , & sa , NULL) == -1){	
+	perror("sigaction  SIGCHLD)");
+	}
+
+}
+
+void traitement_signal(int sig){
+	printf("Signal %d reçu \n", sig);
 }
