@@ -40,23 +40,35 @@ int main(void) {
 		if (fork() == 0) {
 			close(socket_serveur); //car fils pas besoin socket : il ya encore la reférence dans son père
 			
-			write(socket_client, message_bienvenue, strlen(message_bienvenue));
-			
 			char buffer[BUFFER_SIZE];
+
+			FILE *client = fdopen(socket_client, "w+");
+				
+			// Skiping header
+			// while(fgets(buffer, BUFFER_SIZE, client) != NULL) {
+			// 	fprintf(stderr, "loop");
+			// 	if (strcmp(buffer, "\r\n") == 0) {
+			// 		break;
+			// 	}
+			// }
+
+			fprintf(client, message_bienvenue, strlen(message_bienvenue));
+			fflush(client);
+
 			while (1) {
 				bzero(buffer,BUFFER_SIZE);
-								
-				if(read(socket_client, buffer, BUFFER_SIZE) <= 0){
-					//buffer[150] = '\0';
+
+				if(fgets(buffer, BUFFER_SIZE, client) == NULL) {
 					break;
 				}
 				
 				printf("Message: %s", buffer);
 				
-				if(write(socket_client, buffer, strlen(buffer)) <= 0){
+				if(fprintf(client, buffer, strlen(buffer)) <= 0) {
 					break;
 				}
 			}
+			
 			printf("DEBUG: client deconnecté \n");
 			return -1;
 		}
