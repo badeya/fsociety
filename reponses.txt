@@ -10,3 +10,7 @@ Délais de 30 secondes avant de pouvoir relancer.
 
 4. Un seul des clients reçoit les messages du serveur.
 Notre serveur est donc mono-client.
+
+
+---------------------  5.1.2  ---------------------
+

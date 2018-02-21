@@ -37,20 +37,18 @@ int main(void) {
 			exit(1);
 		}
 
+		/*
+		 * char *c token = strtok(chaine, " ");  <= iterateur
+		 * while(token != NULL)
+		 * 	token = strtok(NULL, " ");
+		 */
+
 		if (fork() == 0) {
 			close(socket_serveur); //car fils pas besoin socket : il ya encore la reférence dans son père
 			
 			char buffer[BUFFER_SIZE];
 
 			FILE *client = fdopen(socket_client, "w+");
-				
-			// Skiping header
-			// while(fgets(buffer, BUFFER_SIZE, client) != NULL) {
-			// 	fprintf(stderr, "loop");
-			// 	if (strcmp(buffer, "\r\n") == 0) {
-			// 		break;
-			// 	}
-			// }
 
 			fprintf(client, message_bienvenue, strlen(message_bienvenue));
 			fflush(client);
@@ -61,14 +59,23 @@ int main(void) {
 				if(fgets(buffer, BUFFER_SIZE, client) == NULL) {
 					break;
 				}
+
+				// Skiping header
+				/*
+				while(fgets(buffer, BUFFER_SIZE, client) != NULL) {			
+					if (strcmp(buffer, "\r\n") == 0)
+						break;
+				} */
 				
 				printf("Message: %s", buffer);
 				
+				// concat <fsociety> + buffer
+
 				if(fprintf(client, buffer, strlen(buffer)) <= 0) {
 					break;
-				}
+				} 
 			}
-			
+
 			printf("DEBUG: client deconnecté \n");
 			return -1;
 		}
