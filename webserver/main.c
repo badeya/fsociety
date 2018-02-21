@@ -38,25 +38,29 @@ int main(void) {
 		}
 
 		if (fork() == 0) {
-			close(socket_serveur);//car fils pas besoin socket : il ya encore la reférence dans son père
+			close(socket_serveur); //car fils pas besoin socket : il ya encore la reférence dans son père
 			
 			write(socket_client, message_bienvenue, strlen(message_bienvenue));
 			
+			char buffer[BUFFER_SIZE];
 			while (1) {
-				char buffer[BUFFER_SIZE];
-
-				while(read(socket_client, buffer, BUFFER_SIZE) > 0) {
+				bzero(buffer,BUFFER_SIZE);
+								
+				if(read(socket_client, buffer, BUFFER_SIZE) <= 0){
 					//buffer[150] = '\0';
-					printf("Message: %s", buffer);
+					break;
 				}
-				printf("DEBUG: client deconnecté \n");
-				return -1;
+				
+				printf("Message: %s", buffer);
+				
+				if(write(socket_client, buffer, strlen(buffer)) <= 0){
+					break;
+				}
 			}
+			printf("DEBUG: client deconnecté \n");
+			return -1;
 		}
-
 		close(socket_client);
-		return 0;
-
 	}
 }
 
@@ -69,14 +73,14 @@ void initialiser_signaux() {
 
 	sa.sa_handler = traitement_signal;
 	sigemptyset(&sa.sa_mask);
-	sa . sa_flags = SA_RESTART;
-	if(sigaction(SIGCHLD , & sa , NULL) == -1){	
-	perror("sigaction  SIGCHLD)");
-	}
+	sa.sa_flags = SA_RESTART;
+	
+	if(sigaction(SIGCHLD , &sa , NULL) == -1)
+		perror("sigaction  SIGCHLD)");
 
 }
 
 void traitement_signal(int sig){
 	printf("Signal %d reçu \n", sig);
-	while(waitpid(-1,NULL,WNOHANG)>0);
+	while(waitpid(-1,NULL,WNOHANG) > 0);
 }
