@@ -70,8 +70,11 @@ int main(void) {
 				printf("Message: %s", buffer);
 				
 				// concat <fsociety> + buffer
+				char *message = malloc(strlen(buffer) + 11);
+				strcpy(message, "<fsociety> ");
+				strcat(message, buffer);
 
-				if(fprintf(client, buffer, strlen(buffer)) <= 0) {
+				if(fprintf(client, message, strlen(message)) <= 0) {
 					break;
 				} 
 			}
