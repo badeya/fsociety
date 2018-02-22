@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <regex.h>
+
 #include "main.h"
 #include "socket.h"
 
@@ -53,7 +55,9 @@ int main(void) {
 			fprintf(client, message_bienvenue, strlen(message_bienvenue));
 			fflush(client);
 
-			while (1) {
+			int init_status = init_connection(client, buffer);
+
+			while (init_status == 1) {
 				bzero(buffer,BUFFER_SIZE);
 
 				if(fgets(buffer, BUFFER_SIZE, client) == NULL) {
@@ -70,13 +74,14 @@ int main(void) {
 				printf("Message: %s", buffer);
 				
 				// concat <fsociety> + buffer
+				/*
 				char *message = malloc(strlen(buffer) + 11);
 				strcpy(message, "<fsociety> ");
 				strcat(message, buffer);
 
 				if(fprintf(client, message, strlen(message)) <= 0) {
 					break;
-				} 
+				} */ 
 			}
 
 			printf("DEBUG: client deconnecté \n");
@@ -84,6 +89,44 @@ int main(void) {
 		}
 		close(socket_client);
 	}
+}
+
+int init_connection(FILE *client, char *buffer) {
+	bzero(buffer,BUFFER_SIZE);
+
+	if(fgets(buffer, BUFFER_SIZE, client) == NULL)
+		return -1;
+
+	printf("buffer : [%s]\n", buffer);
+
+	/* REGULAR EXPRESSION VERIFICATION */
+
+	regex_t regex;
+	int status_code;
+
+	/* COMPILE */
+	status_code = regcomp(&regex, "^GET / HTTP/1.[0-1]\r\n$", 0);
+	printf("Status code : %d\n", status_code);
+	if (status_code)
+		return -1;
+
+	/* EXEC */
+	status_code = regexec(&regex, buffer, 0, NULL, 0);
+	printf("Status code : %d %d\n", status_code, REG_NOMATCH);
+	if (status_code || status_code == REG_NOMATCH)
+		return -1;
+
+	/* FREE */
+	regfree(&regex);
+
+	while(strcmp(buffer, "\r\n") != 0 && strcmp(buffer, "\n") != 0) {
+		printf("Buf : %s", buffer);
+		if(fgets(buffer, BUFFER_SIZE, client) == NULL)
+			return -1;
+	}
+
+	printf("test");
+	return 1;
 }
 
 void initialiser_signaux() {

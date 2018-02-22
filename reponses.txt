@@ -14,3 +14,17 @@ Notre serveur est donc mono-client.
 
 ---------------------  5.1.2  ---------------------
 
+3. Message envoyé par curl :
+
+Message: GET / HTTP/1.1
+Message: Host: localhost:8080
+Message: User-Agent: curl/7.52.1
+Message: Accept: */*
+
+4.
+
+"GET / HTTP/1.1"
+
+GET : Méthode
+/ : Chemin du fichier
+HTTP/1.1 : Protocole/version
